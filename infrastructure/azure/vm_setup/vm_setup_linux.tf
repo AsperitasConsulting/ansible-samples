@@ -1,14 +1,14 @@
 module "linux_vm" {
   source = "./modules/linux_vm"
 
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location            = azurerm_resource_group.resource_group.location
   vm_name             = "linux-vm"
   subnet_id           = azurerm_subnet.subnet.id
   ssh_public_key      = data.azurerm_key_vault_secret.ssh_public_key.value
 
   tags = {
-    environment = "dev"
+    operating_system = "linux"
   }
 }
 
