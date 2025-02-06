@@ -48,9 +48,18 @@ jobs:
         with:
             creds: ${{ secrets.ARM_SERVICE_PRINCIPAL_CREDS }}
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.10'
+    
       - name: Install Python Dependencies
         run: |
-            pip install azure-identity azure-keyvault-secrets
+            python -m pip install --upgrade pip
+            pip install ansible
+            pip install 'azure-identity>=1.7.0'
+            pip install azure-keyvault-secrets
+            pip install 'ansible[azure]'
 
       - name: Install Ansible Collections
         env:
