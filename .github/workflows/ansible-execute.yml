@@ -20,3 +20,5 @@ jobs:
     with:
       inventory_file: inventories/${{ inputs.inventory }}
       playbook_file: playbooks/${{ inputs.playbook }}
+    secrets:
+        inherit: true

@@ -26,6 +26,26 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      - name: Validate Files
+        run: |
+          if [ ! -f "${{ inputs.inventory_file }}" ]; then
+            echo "Error: Inventory file '${{ inputs.inventory_file }}' not found"
+            exit 1
+          fi
+          
+          if [ ! -f "${{ inputs.playbook_file }}" ]; then
+            echo "Error: Playbook file '${{ inputs.playbook_file }}' not found"
+            exit 1
+          fi
+
       - name: Run Ansible Playbook
         run: |
           ansible-playbook \
