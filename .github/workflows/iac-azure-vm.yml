@@ -1,0 +1,25 @@
+name: 'IaC-Azure - Virtual Machine Setup'
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply the Terraform changes'
+        type: boolean
+        default: false
+        required: true
+      destroy:
+        description: 'Destroy the infrastructure'
+        type: boolean
+        default: false
+        required: true
+
+jobs:
+  terraform:
+    uses: AsperitasConsulting/reusable-workflows/.github/workflows/terraform.yml@v0.0.1
+    with:
+      terraform-folder: infrastructure/azure/vm_setup
+      environment: demo
+      apply: ${{ inputs.apply }}
+      destroy: ${{ inputs.destroy }}
+    secrets: inherit
