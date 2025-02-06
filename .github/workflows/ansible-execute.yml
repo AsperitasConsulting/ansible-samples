@@ -18,6 +18,7 @@ jobs:
   call-ansible-workflow:
     uses: ./.github/workflows/ansible.yml
     with:
+      environment: demo
       inventory_file: inventories/${{ inputs.inventory }}
       playbook_file: playbooks/${{ inputs.playbook }}
     secrets: inherit
