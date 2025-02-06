@@ -16,3 +16,21 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                    = "standard"
   enable_rbac_authorization   = true
 }
+
+# Generate a random password
+resource "random_password" "linux_admin_password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+  min_lower        = 1
+  min_upper        = 1
+  min_numeric      = 1
+  min_special      = 1
+}
+
+# Store the generated password in Key Vault
+resource "azurerm_key_vault_secret" "linux_admin_password" {
+  name         = "ansible-linux-admin-password"
+  value        = random_password.linux_admin_password.result
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
