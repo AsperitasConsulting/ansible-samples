@@ -18,7 +18,7 @@ jobs:
   terraform:
     uses: ./.github/workflows/terraform.yml
     with:
-      working_directory: infrastructure/azure/vault_setup
+      terraform-folder: infrastructure/azure/vault_setup
       environment: demo
       apply: ${{ inputs.apply }}
       destroy: ${{ inputs.destroy }}
