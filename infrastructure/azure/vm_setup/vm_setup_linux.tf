@@ -5,9 +5,19 @@ module "linux_vm" {
   location            = azurerm_resource_group.rg.location
   vm_name             = "linux-vm"
   subnet_id           = azurerm_subnet.subnet.id
-  ssh_public_key      = file("~/.ssh/id_rsa.pub")
+  ssh_public_key      = data.azurerm_key_vault_secret.ssh_public_key.value
 
   tags = {
     environment = "dev"
   }
+}
+
+data "azurerm_key_vault" "kv" {
+  name                = var.key_vault_name
+  resource_group_name = var.key_vault_resource_group
+}
+
+data "azurerm_key_vault_secret" "ssh_public_key" {
+  name         = var.ssh_public_key_secret_name
+  key_vault_id = data.azurerm_key_vault.kv.id
 }
