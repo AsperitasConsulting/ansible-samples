@@ -1,0 +1,22 @@
+name: Execute Ansible Playbook
+
+on:
+  workflow_dispatch:
+    inputs:
+      inventory:
+        description: 'Inventory file from inventories folder (e.g. local.ini)'
+        required: true
+        type: string
+        default: 'local.ini'
+      playbook:
+        description: 'Playbook file from playbooks folder (e.g. hello-world.yml)'
+        required: true
+        type: string
+        default: 'hello-world.yml'
+
+jobs:
+  call-ansible-workflow:
+    uses: ./.github/workflows/ansible.yml
+    with:
+      inventory_file: inventories/${{ inputs.inventory }}
+      playbook_file: playbooks/${{ inputs.playbook }}

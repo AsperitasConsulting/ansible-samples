@@ -1,0 +1,34 @@
+name: Reusable Ansible Workflow
+
+on:
+  workflow_call:
+    inputs:
+      inventory_file:
+        required: true
+        type: string
+        description: 'Path to the Ansible inventory file'
+      playbook_file:
+        required: true
+        type: string
+        description: 'Path to the Ansible playbook file'
+      ansible_args:
+        required: false
+        type: string
+        description: 'Additional Ansible arguments'
+        default: ''
+
+jobs:
+  run-ansible:
+    name: Run Ansible Playbook
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook \
+            -i ${{ inputs.inventory_file }} \
+            ${{ inputs.playbook_file }} \
+            ${{ inputs.ansible_args }}
