@@ -48,6 +48,10 @@ jobs:
         with:
             creds: ${{ secrets.ARM_SERVICE_PRINCIPAL_CREDS }}
 
+      - name: Install Python Dependencies
+        run: |
+            pip install azure-identity azure-keyvault-secrets
+
       - name: Install Ansible Collections
         env:
             AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
