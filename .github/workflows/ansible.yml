@@ -47,7 +47,15 @@ jobs:
         uses: azure/login@v2
         with:
             creds: ${{ secrets.ARM_SERVICE_PRINCIPAL_CREDS }}
-            
+
+      - name: Install Ansible Collections
+        env:
+            AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            AZURE_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            AZURE_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
+        run: ansible-galaxy collection install azure.azcollection
+
       - name: Run Ansible Playbook
         env:
             AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
