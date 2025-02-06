@@ -43,6 +43,11 @@ jobs:
             exit 1
           fi
 
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+            creds: ${{ secrets.ARM_SERVICE_PRINCIPAL_CREDS }}
+            
       - name: Run Ansible Playbook
         env:
             AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
