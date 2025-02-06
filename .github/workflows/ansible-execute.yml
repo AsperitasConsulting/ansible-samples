@@ -7,12 +7,12 @@ on:
         description: 'Inventory file from inventories folder (e.g. local.ini)'
         required: true
         type: string
-        default: 'local.ini'
+        default: 'azure.ini'
       playbook:
         description: 'Playbook file from playbooks folder (e.g. hello-world.yml)'
         required: true
         type: string
-        default: 'hello-world.yml'
+        default: 'linux-basic.yml'
 
 jobs:
   call-ansible-workflow:
