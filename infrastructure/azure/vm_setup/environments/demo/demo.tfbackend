@@ -1,0 +1,5 @@
+resource_group_name  = "Terraform-Backend-State-RG"
+storage_account_name = "aspterraformstate"
+container_name       = "tfstate"
+key                  = "demo.vm-setup.tfstate"
+
