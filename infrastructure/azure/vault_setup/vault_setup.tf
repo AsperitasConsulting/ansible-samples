@@ -36,3 +36,43 @@ resource "azurerm_key_vault_secret" "ssh_public_key" {
   value        = tls_private_key.ssh_key.public_key_openssh
   key_vault_id = azurerm_key_vault.key_vault.id
 }
+
+# Create Log Analytics Workspace
+resource "azurerm_log_analytics_workspace" "law" {
+  name                = "${var.key_vault_name}-law"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.resource_group.name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+# Enable Key Vault Diagnostics
+resource "azurerm_monitor_diagnostic_setting" "keyvault" {
+  name                       = "${var.key_vault_name}-diag"
+  target_resource_id         = azurerm_key_vault.key_vault.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category_group = "audit"
+    retention_policy {
+      enabled = true
+      days    = 30
+    }
+  }
+
+  enabled_log {
+    category_group = "allLogs"
+    retention_policy {
+      enabled = true
+      days    = 30
+    }
+  }
+
+  metric {
+    category = "AllMetrics"
+    retention_policy {
+      enabled = true
+      days    = 30
+    }
+  }
+}
