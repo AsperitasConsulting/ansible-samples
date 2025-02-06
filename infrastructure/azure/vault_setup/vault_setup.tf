@@ -54,25 +54,13 @@ resource "azurerm_monitor_diagnostic_setting" "keyvault" {
 
   enabled_log {
     category_group = "audit"
-    retention_policy {
-      enabled = true
-      days    = 30
-    }
   }
 
   enabled_log {
     category_group = "allLogs"
-    retention_policy {
-      enabled = true
-      days    = 30
-    }
   }
 
   metric {
     category = "AllMetrics"
-    retention_policy {
-      enabled = true
-      days    = 30
-    }
   }
 }
