@@ -17,20 +17,22 @@ resource "azurerm_key_vault" "key_vault" {
   enable_rbac_authorization   = true
 }
 
-# Generate a random password
-resource "random_password" "linux_admin_password" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-  min_lower        = 1
-  min_upper        = 1
-  min_numeric      = 1
-  min_special      = 1
+# Generate an SSH key pair
+resource "tls_private_key" "ssh_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
-# Store the generated password in Key Vault
-resource "azurerm_key_vault_secret" "linux_admin_password" {
-  name         = "ansible-linux-admin-password"
-  value        = random_password.linux_admin_password.result
+# Store the SSH private key in Key Vault
+resource "azurerm_key_vault_secret" "ssh_private_key" {
+  name         = "ansible-ssh-private-key"
+  value        = tls_private_key.ssh_key.private_key_pem
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
+
+# Store the SSH public key in Key Vault
+resource "azurerm_key_vault_secret" "ssh_public_key" {
+  name         = "ansible-ssh-public-key"
+  value        = tls_private_key.ssh_key.public_key_openssh
   key_vault_id = azurerm_key_vault.key_vault.id
 }
