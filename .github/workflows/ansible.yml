@@ -75,6 +75,7 @@ jobs:
             AZURE_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
             AZURE_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
             AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
+            ANSIBLE_DEBUG: true
         run: |
           ansible-playbook \
             -i ${{ inputs.inventory_file }} \
