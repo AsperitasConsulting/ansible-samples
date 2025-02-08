@@ -77,6 +77,7 @@ jobs:
             AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
             ANSIBLE_DEBUG: true
         run: |
+          az account show
           az keyvault secret show --debug --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --query value -o tsv > ansible-ssh-private-key.pem
           chmod 600 ansible-ssh-private-key.pem
           ansible-playbook \
