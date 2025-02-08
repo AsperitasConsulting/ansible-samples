@@ -79,7 +79,7 @@ jobs:
         run: |
           az keyvault secret show --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --query value -o tsv > ansible-ssh-private-key.pem
           chmod 600 ansible-ssh-private-key.pem
-          ansible-playbook \
+          ansible-playbook -vvv \
             -i ${{ inputs.inventory_file }} \
             ${{ inputs.playbook_file }} \
             ${{ inputs.ansible_args }}
