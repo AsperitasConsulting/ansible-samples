@@ -78,8 +78,9 @@ jobs:
             ANSIBLE_DEBUG: true
         run: |
           az keyvault list 
-          az keyvault secret list --vault-name ansible-demo-keyvault --subscription $AZURE_SUBSCRIPTION_ID
-          az keyvault secret show --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --subscription $AZURE_SUBSCRIPTION_ID --query value -o tsv > ansible-ssh-private-key.pem
+          az keyvault show --vault-name ansible-demo-keyvault 
+          az keyvault secret list --vault-name ansible-demo-keyvault 
+          az keyvault secret show --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --query value -o tsv > ansible-ssh-private-key.pem
           chmod 600 ansible-ssh-private-key.pem
           ansible-playbook \
             -i ${{ inputs.inventory_file }} \
