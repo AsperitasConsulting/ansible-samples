@@ -1,7 +1,7 @@
 ---
-- name: Execute uname command on target hosts
+- name: Execute basic commands on target hosts
   hosts: all
-  gather_facts: false
+  gather_facts: true
   tasks:
     - name: Test SSH connectivity
       ping:
