@@ -3,6 +3,9 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Test SSH connectivity
+      ping:
+
     - name: Run uname -a
       command: uname -a
       register: uname_output
