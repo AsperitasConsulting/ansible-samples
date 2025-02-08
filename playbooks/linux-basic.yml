@@ -3,15 +3,20 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Test SSH connectivity with verbose output
-      ping:
-      register: ping_result
+    - name: Install required Python packages
+      raw: |
+        sudo apt-get update && \
+        sudo apt-get install -y python3-future python3-setuptools && \
+        sudo pip3 install 'typing-extensions>=3.7.4' 'future>=0.18.2'
       ignore_errors: yes
 
-    - name: Display ping result
+    - name: Test SSH connectivity with simple command
+      raw: "python3 -c 'print(\"hello\")'"
+      register: test_result
+
+    - name: Display test result
       debug:
-        var: ping_result
-        verbosity: 0
+        var: test_result
 
     # - name: Run uname -a
     #   command: uname -a
