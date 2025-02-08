@@ -6,18 +6,18 @@
     - name: Test SSH connectivity
       ping:
 
-    - name: Run uname -a
-      command: uname -a
-      register: uname_output
+    # - name: Run uname -a
+    #   command: uname -a
+    #   register: uname_output
 
-    - name: Display system information
-      debug:
-        var: uname_output.stdout
+    # - name: Display system information
+    #   debug:
+    #     var: uname_output.stdout
 
-    - name: Get process list
-      command: ps aux
-      register: process_list
+    # - name: Get process list
+    #   command: ps aux
+    #   register: process_list
 
-    - name: Display process list
-      debug:
-        var: process_list.stdout_lines
+    # - name: Display process list
+    #   debug:
+    #     var: process_list.stdout_lines
