@@ -17,19 +17,3 @@
     - name: Display test result
       debug:
         var: test_result
-
-    # - name: Run uname -a
-    #   command: uname -a
-    #   register: uname_output
-
-    # - name: Display system information
-    #   debug:
-    #     var: uname_output.stdout
-
-    # - name: Get process list
-    #   command: ps aux
-    #   register: process_list
-
-    # - name: Display process list
-    #   debug:
-    #     var: process_list.stdout_lines
