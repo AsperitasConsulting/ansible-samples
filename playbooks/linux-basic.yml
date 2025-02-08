@@ -3,8 +3,15 @@
   hosts: all
   gather_facts: false
   tasks:
-    - name: Test SSH connectivity
+    - name: Test SSH connectivity with verbose output
       ping:
+      register: ping_result
+      ignore_errors: yes
+
+    - name: Display ping result
+      debug:
+        var: ping_result
+        verbosity: 0
 
     # - name: Run uname -a
     #   command: uname -a
