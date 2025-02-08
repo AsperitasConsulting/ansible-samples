@@ -3,6 +3,12 @@
   hosts: all
   gather_facts: false
   tasks:
+    - name: Install required Python packages
+      raw: |
+        sudo apt-get update && \
+        sudo apt-get install -y python3-future python3-setuptools && \
+        sudo pip3 install 'typing-extensions>=3.7.4' 'future>=0.18.2'
+        
     - name: Test SSH connectivity with simple command
       raw: "python3 -c 'print(\"hello\")'"
       register: test_result
