@@ -17,3 +17,11 @@
     - name: Display test result
       debug:
         var: test_result
+
+    - name: Ping test to verify connectivity
+      ping:
+      register: ping_result
+
+    - name: Display ping result
+      debug:
+        var: ping_result
