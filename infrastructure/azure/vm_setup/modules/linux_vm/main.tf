@@ -49,5 +49,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = var.image_version
   }
 
+  custom_data = base64encode(file("${path.module}/bootscript.sh"))
+
   tags = var.tags
-} 
+}

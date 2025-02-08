@@ -36,3 +36,22 @@ resource "azurerm_key_vault_secret" "ssh_public_key" {
   value        = tls_private_key.ssh_key.public_key_openssh
   key_vault_id = azurerm_key_vault.key_vault.id
 }
+
+# Enable Key Vault Diagnostics
+resource "azurerm_monitor_diagnostic_setting" "keyvault" {
+  name                       = "${var.key_vault_name}-diag"
+  target_resource_id         = azurerm_key_vault.key_vault.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category_group = "audit"
+  }
+
+  enabled_log {
+    category_group = "allLogs"
+  }
+
+  metric {
+    category = "AllMetrics"
+  }
+}

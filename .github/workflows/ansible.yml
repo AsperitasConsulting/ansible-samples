@@ -11,6 +11,10 @@ on:
         required: true
         type: string
         description: 'Path to the Ansible playbook file'
+      environment:
+        required: true
+        type: string
+        description: 'Environment to deploy (e.g., dev, staging, prod)'
       ansible_args:
         required: false
         type: string
@@ -21,13 +25,60 @@ jobs:
   run-ansible:
     name: Run Ansible Playbook
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Run Ansible Playbook
+      - name: Validate Files
         run: |
+          if [ ! -f "${{ inputs.inventory_file }}" ]; then
+            echo "Error: Inventory file '${{ inputs.inventory_file }}' not found"
+            exit 1
+          fi
+          
+          if [ ! -f "${{ inputs.playbook_file }}" ]; then
+            echo "Error: Playbook file '${{ inputs.playbook_file }}' not found"
+            exit 1
+          fi
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+            creds: ${{ secrets.ARM_SERVICE_PRINCIPAL_CREDS }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.10'
+    
+      - name: Install Python Dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install ansible
+            pip install 'azure-identity>=1.7.0'
+            pip install azure-keyvault-secrets
+            pip install 'ansible[azure]'
+
+      - name: Install Ansible Collections
+        env:
+            AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            AZURE_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            AZURE_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
+        run: ansible-galaxy collection install azure.azcollection
+
+      - name: Run Ansible Playbook
+        env:
+            AZURE_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+            AZURE_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+            AZURE_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+            AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
+            ANSIBLE_DEBUG: true
+        run: |
+          az keyvault secret show --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --query value -o tsv > ansible-ssh-private-key.pem
+          chmod 600 ansible-ssh-private-key.pem
           ansible-playbook \
             -i ${{ inputs.inventory_file }} \
             ${{ inputs.playbook_file }} \
