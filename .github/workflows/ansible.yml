@@ -74,7 +74,6 @@ jobs:
             pip install 'azure-identity>=1.7.0'
             pip install azure-keyvault-secrets
             pip install 'ansible[azure]'
-            ansible-galaxy collection install azure.azcollection
 
       - name: Install Ansible Collections
         env:
@@ -82,7 +81,10 @@ jobs:
             AZURE_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
             AZURE_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
             AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
-        run: ansible-galaxy collection install azure.azcollection
+        run: |
+          ansible-galaxy collection install azure.azcollection
+          ls -lR ~/.ansible
+          pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
 
       - name: Run Ansible Playbook
         env:
