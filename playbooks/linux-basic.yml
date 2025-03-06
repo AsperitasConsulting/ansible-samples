@@ -14,11 +14,16 @@
         sudo apt-get install -y python3-pip && \
         sudo pip3 install azure-cli azure-keyvault-secrets
 
-    - name: Authenticate with Azure using managed identity
-      azure_rm_keyvaultsecret_info: 
+    - name: Get Key Vault secret
+      azure.azcollection.azure_rm_keyvaultsecret_info:
         vault_name: "{{ azure_keyvault_name }}"
         name: "{{ key_secret_name }}"
         resource_group: "{{ azure_keyvault_rg }}"
+        auth_source: service_principal
+        client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+        secret: "{{ lookup('env', 'AZURE_SECRET') }}"
+        tenant: "{{ lookup('env', 'AZURE_TENANT') }}"
+        subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
       register: secret_result
 
     - name: Save PEM key to file
