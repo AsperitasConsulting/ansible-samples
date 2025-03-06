@@ -74,6 +74,8 @@ jobs:
             pip install 'azure-identity>=1.7.0'
             pip install azure-keyvault-secrets
             pip install 'ansible[azure]'
+            ansible-galaxy collection install azure.azcollection
+            pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
 
       - name: Install Ansible Collections
         env:
