@@ -5,6 +5,7 @@
   vars:
     azure_keyvault_name: "your-keyvault-name"
     key_secret_name: "your-pem-key-secret-name"
+    azure_keyvault_rg: "your-keyvault-rg"
   
   tasks:
     - name: Install Azure CLI dependencies
@@ -14,17 +15,16 @@
         sudo pip3 install azure-cli azure-keyvault-secrets
 
     - name: Authenticate with Azure using managed identity
-      raw: az login --identity
-      register: az_login
-      
-    - name: Retrieve PEM key from Azure Key Vault
-      raw: az keyvault secret show --vault-name {{ azure_keyvault_name }} --name {{ key_secret_name }} --query value -o tsv
-      register: pem_key
+      azure_rm_keyvaultsecret_info: 
+        vault_name: {{ azure_keyvault_name }}
+        name: {{ key_secret_name }}
+        resource_group: {{ azure_keyvault_rg }}
+      register: secret_result
 
     - name: Save PEM key to file
       copy:
-        content: "{{ pem_key.stdout }}"
-        dest: "/tmp/azure_key.pem"
+        content: "{{ secret_result }}"
+        dest: "ansible-ssh-private-key.pem"
         mode: '0600'
 
     - name: Install required Python packages

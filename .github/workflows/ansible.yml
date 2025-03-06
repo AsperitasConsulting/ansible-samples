@@ -19,6 +19,11 @@ on:
         required: true
         type: string
         description: 'Name of the Azure Key Vault to use'
+      azure_keyvault_rg:
+        required: true
+        type: string
+        description: 'Name of the Azure Key Vault Resource Group'
+        default: 'DEMO-ANSIBLE-RG'
       key_secret_name:
         required: true
         type: string
@@ -90,5 +95,6 @@ jobs:
             -i ${{ inputs.inventory_file }} \
             ${{ inputs.playbook_file }} \
             -e "azure_keyvault_name=${{ inputs.azure_keyvault_name }}" \
+            -e "azure_keyvault_rg=${{ inputs.azure_keyvault_rg }}" \
             -e "key_secret_name=${{ inputs.key_secret_name }}" \
             ${{ inputs.ansible_args }}
