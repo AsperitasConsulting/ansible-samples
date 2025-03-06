@@ -15,6 +15,15 @@ on:
         required: true
         type: string
         description: 'Environment to deploy (e.g., dev, staging, prod)'
+      azure_keyvault_name:
+        required: true
+        type: string
+        description: 'Name of the Azure Key Vault to use'
+      key_secret_name:
+        required: true
+        type: string
+        description: 'Name of the SSH private key secret in Azure Key Vault'
+        default: 'ansible-ssh-private-key'
       ansible_args:
         required: false
         type: string
@@ -77,9 +86,9 @@ jobs:
             AZURE_TENANT: ${{ secrets.ARM_TENANT_ID }}
             ANSIBLE_DEBUG: true
         run: |
-          az keyvault secret show --name ansible-ssh-private-key --vault-name ansible-demo-keyvault --query value -o tsv > ansible-ssh-private-key.pem
-          chmod 600 ansible-ssh-private-key.pem
           ansible-playbook \
             -i ${{ inputs.inventory_file }} \
             ${{ inputs.playbook_file }} \
+            -e "azure_keyvault_name=${{ inputs.azure_keyvault_name }}" \
+            -e "key_secret_name=${{ inputs.key_secret_name }}" \
             ${{ inputs.ansible_args }}

@@ -2,7 +2,31 @@
 - name: Execute basic commands on target hosts
   hosts: all
   gather_facts: false
+  vars:
+    azure_keyvault_name: "your-keyvault-name"
+    key_secret_name: "your-pem-key-secret-name"
+  
   tasks:
+    - name: Install Azure CLI dependencies
+      raw: |
+        sudo apt-get update && \
+        sudo apt-get install -y python3-pip && \
+        sudo pip3 install azure-cli azure-keyvault-secrets
+
+    - name: Authenticate with Azure using managed identity
+      raw: az login --identity
+      register: az_login
+      
+    - name: Retrieve PEM key from Azure Key Vault
+      raw: az keyvault secret show --vault-name {{ azure_keyvault_name }} --name {{ key_secret_name }} --query value -o tsv
+      register: pem_key
+
+    - name: Save PEM key to file
+      copy:
+        content: "{{ pem_key.stdout }}"
+        dest: "/tmp/azure_key.pem"
+        mode: '0600'
+
     - name: Install required Python packages
       raw: |
         sudo apt-get update && \

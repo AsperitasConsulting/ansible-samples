@@ -13,6 +13,17 @@ on:
         required: true
         type: string
         default: 'linux-basic.yml'
+      azure_keyvault_name:
+        required: true
+        type: string
+        description: 'Name of the Azure Key Vault to use'
+        default: 'ansible-demo-keyvault'
+      key_secret_name:
+        required: true
+        type: string
+        description: 'Name of the SSH private key secret in Azure Key Vault'
+        default: 'ansible-ssh-private-key'
+
 
 jobs:
   call-ansible-workflow:
@@ -21,4 +32,6 @@ jobs:
       environment: demo
       inventory_file: inventories/${{ inputs.inventory }}
       playbook_file: playbooks/${{ inputs.playbook }}
+      azure_keyvault_name: ${{ inputs.azure_keyvault_name }}
+      key_secret_name: ${{ inputs.key_secret_name }}
     secrets: inherit
