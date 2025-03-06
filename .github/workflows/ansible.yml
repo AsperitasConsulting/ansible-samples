@@ -84,7 +84,7 @@ jobs:
         run: |
           ansible-galaxy collection install azure.azcollection
           ls -lR ~/.ansible
-          pip install -r ~/.ansible/collections/ansible_collections/azure/azcollection/requirements-azure.txt
+          pip install -r https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt
 
       - name: Run Ansible Playbook
         env:
