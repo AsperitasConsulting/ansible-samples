@@ -16,9 +16,9 @@
 
     - name: Authenticate with Azure using managed identity
       azure_rm_keyvaultsecret_info: 
-        vault_name: {{ azure_keyvault_name }}
-        name: {{ key_secret_name }}
-        resource_group: {{ azure_keyvault_rg }}
+        vault_name: "{{ azure_keyvault_name }}"
+        name: "{{ key_secret_name }}"
+        resource_group: "{{ azure_keyvault_rg }}"
       register: secret_result
 
     - name: Save PEM key to file
