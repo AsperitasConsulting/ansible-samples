@@ -12,23 +12,23 @@
       raw: |
         sudo apt-get update && \
         sudo apt-get install -y python3-pip && \
-        sudo pip3 install azure-cli azure-keyvault-secrets
+        sudo pip3 install azure-cli msrestazure azure-identity azure-mgmt-keyvault
 
     - name: Get Key Vault secret
       azure.azcollection.azure_rm_keyvaultsecret_info:
-        vault_name: "{{ azure_keyvault_name }}"
+        vault_uri: "https://{{ azure_keyvault_name }}.vault.azure.net"
         name: "{{ key_secret_name }}"
-        resource_group: "{{ azure_keyvault_rg }}"
-        auth_source: service_principal
-        client_id: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
-        secret: "{{ lookup('env', 'AZURE_SECRET') }}"
-        tenant: "{{ lookup('env', 'AZURE_TENANT') }}"
-        subscription_id: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
+        auth_source: env
       register: secret_result
+      environment:
+        AZURE_CLIENT_ID: "{{ lookup('env', 'AZURE_CLIENT_ID') }}"
+        AZURE_SECRET: "{{ lookup('env', 'AZURE_SECRET') }}"
+        AZURE_TENANT: "{{ lookup('env', 'AZURE_TENANT') }}"
+        AZURE_SUBSCRIPTION_ID: "{{ lookup('env', 'AZURE_SUBSCRIPTION_ID') }}"
 
     - name: Save PEM key to file
       copy:
-        content: "{{ secret_result }}"
+        content: "{{ secret_result.secrets[0].secret }}"
         dest: "ansible-ssh-private-key.pem"
         mode: '0600'
 
